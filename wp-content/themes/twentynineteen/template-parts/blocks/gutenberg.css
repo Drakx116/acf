@@ -1,0 +1,41 @@
+/* RESET */
+
+.entry .entry-content > * {
+    max-width: revert;
+}
+
+
+
+/* IMAGES */
+
+.image-left {
+    display: flex;
+}
+
+.image-center {
+    display: flex;
+    flex-flow: column wrap;
+    align-content: center;
+}
+
+.image-right {
+    display: flex;
+    flex-flow: column wrap;
+    align-content: flex-end;
+}
+
+
+
+/* IMAGES */
+
+.text-left {
+    text-align: left
+}
+
+.text-center {
+    text-align: center
+}
+
+.text-right {
+    text-align: right
+}
