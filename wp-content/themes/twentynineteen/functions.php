@@ -256,6 +256,8 @@ function twentynineteen_scripts() {
 		wp_enqueue_script( 'twentynineteen-touch-navigation', get_theme_file_uri( '/js/touch-keyboard-navigation.js' ), array(), '20181231', true );
 	}
 
+	wp_enqueue_style('twentynineteen-custom-gutenberg', get_template_directory_uri(). '/template-parts/blocks/gutenberg.css');
+
 	wp_enqueue_style( 'twentynineteen-print-style', get_template_directory_uri() . '/print.css', array(), wp_get_theme()->get( 'Version' ), 'print' );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -263,6 +265,22 @@ function twentynineteen_scripts() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'twentynineteen_scripts' );
+
+function init_gutenberg_block()
+{
+    if (function_exists('acf_register_block_type')) {
+        acf_register_block_type([
+            'name'              => 'gutenberg',
+            'title'             => __('Gutenberg'),
+            'description'       => __('A custom gutenberg block.'),
+            'render_template'   => 'template-parts/blocks/gutenberg.php',
+            'category'          => 'formatting',
+            'enqueue_style'     => 'template-parts/blocks/gutenberg.css',
+        ]);
+    }
+}
+
+add_action('acf/init', 'init_gutenberg_block');
 
 /**
  * Fix skip link focus in IE11.
