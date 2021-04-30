@@ -3,6 +3,9 @@
     global $wp_query;
 
     $diets = acf_get_field('main_course_diet')['choices'];
+
+    $diet = $_GET['diet'] ?? null;
+    $order = $_GET['price'] ?? null;
 ?>
 
 <div id="primary" class="content-area">
@@ -14,16 +17,17 @@
                 <label for="diet"><b> Diet </b></label>
                 <select name="diet" id="diet">
                     <option value=""> --- No filter --- </option>
-                    <?php foreach ($diets as $diet) {
-                        ?><option value="<?php echo strtolower($diet); ?>"><?php echo $diet; ?></option><?php
+                    <?php foreach ($diets as $currentDiet) {
+                        ?><option <?php if (strtolower($currentDiet) === $diet): echo 'selected'; endif; ?> value="<?php echo strtolower($currentDiet); ?>"><?php echo $currentDiet; ?></option><?php
                     } ?>
                 </select><br>
 
                 <label for="price"><b> Order By Price </b></label>
                 <select name="price" id="price">
                     <option value=""> --- No filter --- </option>
-                    <option value="ASC">ASC</option>
-                    <option value="DESC">DESC</option>
+                    <?php foreach ([ 'ASC', 'DESC' ] as $currentOrder) {
+                        ?><option <?php if ($currentOrder === $order): echo 'selected'; endif; ?> value="<?php echo $currentOrder; ?>"><?php echo $currentOrder; ?></option><?php
+                    } ?>
                 </select>
                 <br>
                 <a href="/custom-restaurant"> Reset filters </a>
@@ -35,9 +39,6 @@
         <?php
 
         $paged = absint(get_query_var('paged')) ?? 1;
-
-        $diet = $_GET['diet'] ?? null;
-        $order = $_GET['price'] ?? null;
 
         $args = [
             'post_type' => 'main-course',
