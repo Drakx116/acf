@@ -338,7 +338,16 @@ function twentynineteen_colors_css_wrap() {
 	</style>
 	<?php
 }
+
 add_action( 'wp_head', 'twentynineteen_colors_css_wrap' );
+
+// CUSTOM ACTION
+
+add_action('the_title', 'twentynineteen_uppercase_title', 10, 1);
+
+function twentynineteen_uppercase_title($title) {
+    return strtoupper($title);
+}
 
 /**
  * SVG Icons class.
