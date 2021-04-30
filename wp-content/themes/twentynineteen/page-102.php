@@ -13,6 +13,7 @@
 
                 <label for="diet"><b> Diet </b></label>
                 <select name="diet" id="diet">
+                    <option value=""> --- No filter --- </option>
                     <?php foreach ($diets as $diet) {
                         ?><option value="<?php echo strtolower($diet); ?>"><?php echo $diet; ?></option><?php
                     } ?>
@@ -20,6 +21,7 @@
 
                 <label for="price"><b> Order By Price </b></label>
                 <select name="price" id="price">
+                    <option value=""> --- No filter --- </option>
                     <option value="ASC">ASC</option>
                     <option value="DESC">DESC</option>
                 </select>
@@ -40,18 +42,27 @@
         $args = [
             'post_type' => 'main-course',
             'posts_per_page' => 2,
-            'paged' => $paged,
-
+            'paged' => $paged
         ];
 
+        $metaQuery = [];
+
         if ($diet) {
-            $args['meta_key'] = 'main_course_diet';
+            $metaQuery[] = [
+                'key' => 'main_course_diet',
+                'value' => $diet,
+                'compare' => '='
+            ];
         }
 
         if ($order) {
-//            $args['order'] = $order;
-//            $args['orderby'] = 'main_course_price';
+            $metaQuery[] = [
+                'key' => 'main_course_price',
+                'compare' => ($order === 'ASC') ? '<' : '>'
+            ];
         }
+
+        $args['meta_query'] = $metaQuery;
 
         $mainCourses = new WP_Query($args);
 
