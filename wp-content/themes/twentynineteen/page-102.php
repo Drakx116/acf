@@ -45,24 +45,18 @@
             'paged' => $paged
         ];
 
-        $metaQuery = [];
-
         if ($diet) {
-            $metaQuery[] = [
+            $args['meta_query'] = [[
                 'key' => 'main_course_diet',
-                'value' => $diet,
-                'compare' => '='
-            ];
+                'value' => $diet
+            ]];
         }
 
         if ($order) {
-            $metaQuery[] = [
-                'key' => 'main_course_price',
-                'compare' => ($order === 'ASC') ? '<' : '>'
-            ];
+            $args['meta_key'] = 'main_course_price';
+            $args['orderby'] = 'meta_value';
+            $args['order'] = $order;
         }
-
-        $args['meta_query'] = $metaQuery;
 
         $mainCourses = new WP_Query($args);
 
