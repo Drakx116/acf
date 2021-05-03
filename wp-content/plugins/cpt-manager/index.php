@@ -71,3 +71,18 @@ function init_main_course_cpt() {
 
     register_post_type( 'main-course', $args );
 }
+
+if (function_exists('acf_add_options_page')) {
+    acf_add_options_page([
+        'page_title' => 'Contact',
+        'menu_title' => 'Contact',
+        'menu_slug' => 'contact',
+        'post_id' => 'acf-contact',
+        'capability' => 'edit_posts',
+        'redirect' => true,
+        'update_button' => __('Update', 'acf'),
+        'updated_message' => __('Options Updated', 'acf'),
+        'icon_url' => 'dashicons-admin-generic',
+        'position' => 10
+    ]);
+}
