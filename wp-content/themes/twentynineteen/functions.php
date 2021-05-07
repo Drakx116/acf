@@ -282,6 +282,34 @@ function init_gutenberg_block()
 
 add_action('acf/init', 'init_gutenberg_block');
 
+function custom_scripts(){
+    wp_enqueue_script('jquery'); // pour utiliser Ajax WordPress}
+    wp_enqueue_style('custom-style', get_template_directory_uri().'/assets/css/custom.css');
+    wp_enqueue_script('custom-script', get_template_directory_uri().'/assets/js/custom.js');
+    wp_localize_script( 'mon-script-ajax', 'adminAjax', admin_url('admin-ajax.php'));
+}
+
+add_action('wp_enqueue_scripts', 'custom_scripts');
+
+add_action('wp_ajax_send_contact_form', 'twentynineteen_send_contact_form');
+add_action('wp_ajax_nopriv_send_contact_form', 'twentynineteen_send_contact_form');
+
+function twentynineteen_send_contact_form() {
+    $formData = $_POST['form'];
+    $contact = $formData[0]['value'];
+    $title = $formData[1]['value'];
+    $message = $formData[2]['value'];
+
+    if (!($contact && $title && $message)) {
+        wp_send_json_error([ 'error' => 'Missing parameters.' ]);
+    }
+
+    mail($contact, $title, $message);
+
+    wp_send_json_success([ 'message' => 'Mail sent.' ]);
+    wp_die();
+}
+
 /**
  * Fix skip link focus in IE11.
  *
