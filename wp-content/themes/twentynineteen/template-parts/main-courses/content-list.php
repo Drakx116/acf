@@ -1,6 +1,8 @@
 <main id="main" class="site-main" style="display: flex; justify-content: center; flex-direction: row; background-color: <?php echo $bgColor; ?>">
     <?php
-    // LAST 3 MAIN COURSES
+
+    $bgColor = get_field('contact_background_color', 'acf-contact');
+    $textColor = get_field('contact_text_color', 'acf-contact');
 
     $args = [
         'post_type' => 'main-course',
@@ -16,7 +18,7 @@
         if ($mainCourses->have_posts()) : ?>
             <section style="display: flex; justify-content: center; flex-direction: row; background-color: <?php echo $bgColor; ?>"> <?php
                 while ( $mainCourses->have_posts() ) : $mainCourses->the_post(); ?>
-                    <div class="main-course-container" style="text-align: center; margin: 1em 3em; background-color: <?php echo $bgColor; ?>; color: <?php echo '#FFF'; ?>">
+                    <div class="main-course-container" style="text-align: center; margin: 1em 3em; background-color: <?php echo $bgColor; ?>; color: <?php echo $textColor; ?>">
                         <?php
                         $image = get_field('main_course_picture', get_the_ID());
                         $diet = get_field('main_course_diet', get_the_ID());

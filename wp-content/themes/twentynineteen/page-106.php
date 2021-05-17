@@ -5,8 +5,6 @@
     $image = get_field('contact_image', 'acf-contact');
     $title = get_field('contact_title', 'acf-contact');
     $users = get_field('contact_users', 'acf-contact');
-    $bgColor = get_field('contact_background_color', 'acf-contact');
-    $textColor = get_field(' contact_text_color', 'acf-contact');
 ?>
 
 <div id="primary" class="content-area">
