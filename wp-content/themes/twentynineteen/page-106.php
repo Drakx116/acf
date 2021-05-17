@@ -37,7 +37,22 @@
         </div>
     </header>
 
-    <?php get_template_part('template-parts/main-courses/content', 'list'); ?>
+    <main id="main" class="site-main" style="display: flex; justify-content: center; flex-direction: row; background-color: <?php echo $bgColor; ?>">
+        <?php
+            $paged = absint(get_query_var('paged')) ?? 1;
+
+            $mainCourses = new WP_Query([
+                'post_type' => 'main-course',
+                'posts_per_page' => 1,
+                'orderby' => 'post_date',
+                'order' => 'DESC',
+                'paged' => $paged
+            ]);
+
+            set_query_var('main-courses', $mainCourses);
+            get_template_part('template-parts/main-courses/content', 'list');
+        ?>
+    </main>
 </div>
 
 <?php
