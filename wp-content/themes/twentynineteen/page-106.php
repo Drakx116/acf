@@ -39,11 +39,7 @@
         </div>
     </header>
 
-
-    <?php
-        // TODO : Improve call with get_template_part()
-         require( get_template_directory() . '/template-parts/main-courses/list.php');
-     ?>
+    <?php get_template_part('template-parts/main-courses/content', 'list'); ?>
 </div>
 
 <?php
