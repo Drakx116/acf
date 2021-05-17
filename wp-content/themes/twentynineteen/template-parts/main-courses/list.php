@@ -6,7 +6,8 @@
         'post_type' => 'main-course',
         'posts_per_page' => 1,
         'orderby' => 'post_date',
-        'order' => 'DESC'
+        'order' => 'DESC',
+        'paged' => absint(get_query_var('paged')) ?? 1
     ];
 
     $mainCourses = new WP_Query($args);
@@ -28,8 +29,8 @@
                             ?><span> Ingrédient <?php echo $key+1 ?> - <b><?php echo $ingredient ?></b></span><br><?php
                         }
 
-                        echo '<span> Prix <b>' . $price . ' €</b></span>'
-                        ?></div>
+                        echo '<span> Prix <b>' . $price . ' €</b></span>';
+                    ?></div>
                 <?php endwhile; ?>
             </section>
 
@@ -40,5 +41,5 @@
         <?php else:
             echo 'No more results.';
         endif;
-        ?></div>
+    ?></div>
 </main>
