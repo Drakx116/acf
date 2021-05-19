@@ -294,6 +294,9 @@ add_action('wp_enqueue_scripts', 'custom_scripts');
 add_action('wp_ajax_send_contact_form', 'twentynineteen_send_contact_form');
 add_action('wp_ajax_nopriv_send_contact_form', 'twentynineteen_send_contact_form');
 
+add_action('wp_ajax_main_course_update_list', 'twentynineteen_update_main_course_list');
+add_action('wp_ajax_nopriv_main_course_update_list', 'twentynineteen_update_main_course_list');
+
 function twentynineteen_send_contact_form() {
     $formData = $_POST['form'];
     $contact = $formData[0]['value'];
@@ -307,6 +310,29 @@ function twentynineteen_send_contact_form() {
     mail($contact, $title, $message);
 
     wp_send_json_success([ 'message' => 'Mail sent.' ]);
+    wp_die();
+}
+
+function twentynineteen_update_main_course_list() {
+    if (!$currentPage = $_POST['page']) {
+        wp_die();
+    }
+
+    global $paged;
+    $paged = $currentPage;
+
+    $mainCourses = new WP_Query([
+        'post_type' => 'main-course',
+        'posts_per_page' => 1,
+        'orderby' => 'post_date',
+        'order' => 'DESC',
+        'paged' => $paged
+    ]);
+
+    set_query_var('main-courses', $mainCourses);
+    set_query_var('paged', $paged);
+    get_template_part('template-parts/main-courses/content', 'list');
+
     wp_die();
 }
 
