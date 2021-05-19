@@ -3,10 +3,11 @@
 $bgColor = get_field('contact_background_color', 'acf-contact');
 $textColor = get_field('contact_text_color', 'acf-contact');
 $mainCourses = get_query_var('main-courses');
+$paged = get_query_var('paged');
 
 ?> <div><?php
     if ($mainCourses->have_posts()) : ?>
-        <section id="main-courses-list-container" style="display: flex; justify-content: center; flex-direction: row; background-color: <?php echo $bgColor; ?>"> <?php
+        <section id="main-courses-list-container" data-page="<?php echo $paged ?? 1 ?>" style="display: flex; justify-content: center; flex-direction: row; background-color: <?php echo $bgColor; ?>"> <?php
             while ( $mainCourses->have_posts() ) : $mainCourses->the_post(); ?>
                 <div class="main-course-container" style="text-align: center; margin: 1em 3em; background-color: <?php echo $bgColor; ?>; color: <?php echo $textColor; ?>">
                     <?php
