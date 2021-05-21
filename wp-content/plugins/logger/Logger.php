@@ -44,12 +44,9 @@ class Logger
         self::saveLog($id, $post, $action);
     }
 
-    public static function logDeletion($id)
+    public static function logDeletion($id): void
     {
-        $query = new WP_Query([ 'ID' => $id ]);
-        $post = $query->get_posts()[0];
-
-        self::saveLog($id, $post, 'DELETED');
+        self::saveLog($id, get_post($id), 'DELETED');
     }
 
     private static function saveLog($id, $post, $action = null): void
