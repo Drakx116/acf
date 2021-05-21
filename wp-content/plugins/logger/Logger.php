@@ -34,9 +34,34 @@ class Logger
     ##### DATABASE #####
     ####################
 
-    private static function createDbSchema(): void
+    private static function createDbSchema(): bool
     {
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
+        global $wpdb;
+        $tableName = $wpdb->prefix . 'logger';
+
+        if ($wpdb->get_var("show tables like '$tableName'") === $tableName) {
+            return false;
+        }
+
+        $query = "
+            CREATE TABLE IF NOT EXISTS ". $tableName ."
+              (
+                 `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                 `action` VARCHAR(16) NOT NULL,
+                 `entity` INT(16) NOT NULL,
+                 `type` VARCHAR(32) NOT NULL,
+                 `user` VARCHAR(64) NOT NULL,
+                 `date` DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL
+              )
+            engine=innodb
+            DEFAULT charset=utf8;
+        ";
+
+        dbDelta($query);
+
+        return true;
     }
 
 
