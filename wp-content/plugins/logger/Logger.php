@@ -12,22 +12,55 @@ class Logger
         if (!self::$initialized) {
             self::createDbSchema();
             self::createMenu();
+            self::logAdminActions();
             self::$initialized = true;
         }
-
-        self::log();
     }
-
-
 
     ###################
     ##### LOGGING #####
     ###################
 
-    private static function log(): void
+
+
+    private static function logAdminActions(): void
     {
+        add_action('save_post', [ 'Logger', 'log' ], 10, 3);
+        add_action('before_delete_post', [ 'Logger', 'log' ]);
     }
 
+    public static function log($id, $post, $updated): void
+    {
+        self::saveLog($id, $post, $updated);
+    }
+
+    private static function saveLog($id, $post, $updated): void
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'logger';
+
+        if (!$user = wp_get_current_user()) {
+            return; // Should never be thrown
+        }
+
+        $admin = $user->to_array();
+        $entity = $post->to_array();
+
+        $type = $entity['post_type'];
+        if ($type === 'revision') {
+            return; // Do not log revisions
+        }
+
+        $data = [
+            'action' => ($entity['post_title'] === 'Auto Draft') ? 'CREATION' : 'UPDATE',
+            'entity' => $id,
+            'type' => strtoupper($type),
+            'user' => $admin['user_email'],
+            'date' => (new DateTime())->format('Y-m-d H:i:s')
+        ];
+
+        $wpdb->insert($table, $data);
+    }
 
 
     ####################
