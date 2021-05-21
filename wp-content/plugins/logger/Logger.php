@@ -34,7 +34,7 @@ class Logger
     ##### DATABASE #####
     ####################
 
-    private static function createDbSchema(): bool
+    private static function createDbSchema(): void
     {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
@@ -42,7 +42,7 @@ class Logger
         $tableName = $wpdb->prefix . 'logger';
 
         if ($wpdb->get_var("show tables like '$tableName'") === $tableName) {
-            return false;
+            return;
         }
 
         $query = "
@@ -60,8 +60,6 @@ class Logger
         ";
 
         dbDelta($query);
-
-        return true;
     }
 
 
