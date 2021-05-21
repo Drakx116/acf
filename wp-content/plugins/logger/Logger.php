@@ -25,16 +25,34 @@ class Logger
 
     private static function logAdminActions(): void
     {
-        add_action('save_post', [ 'Logger', 'log' ], 10, 3);
-        add_action('before_delete_post', [ 'Logger', 'log' ]);
+        add_action('save_post', [ 'Logger', 'logUpdate' ], 10, 3);
+        add_action('before_delete_post', [ 'Logger', 'logDeletion' ], 10, 1);
     }
 
-    public static function log($id, $post, $updated): void
+    public static function logUpdate($id, $post, $updated): void
     {
-        self::saveLog($id, $post, $updated);
+        $status = $_GET['action'] ?? null;
+
+        // TRASH
+        $action = ($status === 'trash') ? 'TRASHED' : null;
+
+        // UNTRASH
+        if (!$action) {
+            $action = ($status === 'untrash') ? 'UNTRASHED' : null;
+        }
+
+        self::saveLog($id, $post, $action);
     }
 
-    private static function saveLog($id, $post, $updated): void
+    public static function logDeletion($id)
+    {
+        $query = new WP_Query([ 'ID' => $id ]);
+        $post = $query->get_posts()[0];
+
+        self::saveLog($id, $post, 'DELETED');
+    }
+
+    private static function saveLog($id, $post, $action = null): void
     {
         global $wpdb;
         $table = $wpdb->prefix . 'logger';
@@ -46,13 +64,17 @@ class Logger
         $admin = $user->to_array();
         $entity = $post->to_array();
 
+        if (!$action) {
+            $action = ($entity['post_title'] === 'Auto Draft') ? 'CREATED' : 'UPDATED';
+        }
+
         $type = $entity['post_type'];
         if ($type === 'revision') {
             return; // Do not log revisions
         }
 
         $data = [
-            'action' => ($entity['post_title'] === 'Auto Draft') ? 'CREATION' : 'UPDATE',
+            'action' => $action,
             'entity' => $id,
             'type' => strtoupper($type),
             'user' => $admin['user_email'],
