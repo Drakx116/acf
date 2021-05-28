@@ -286,6 +286,7 @@ function custom_scripts(){
     wp_enqueue_script('jquery'); // pour utiliser Ajax WordPress}
     wp_enqueue_style('custom-style', get_template_directory_uri().'/assets/css/custom.css');
     wp_enqueue_script('custom-script', get_template_directory_uri().'/assets/js/custom.js');
+    wp_enqueue_script('reservation-script', get_template_directory_uri().'/assets/js/reservation.js');
     wp_localize_script( 'mon-script-ajax', 'adminAjax', admin_url('admin-ajax.php'));
 }
 
@@ -296,6 +297,9 @@ add_action('wp_ajax_nopriv_send_contact_form', 'twentynineteen_send_contact_form
 
 add_action('wp_ajax_main_course_update_list', 'twentynineteen_update_main_course_list');
 add_action('wp_ajax_nopriv_main_course_update_list', 'twentynineteen_update_main_course_list');
+
+add_action('wp_ajax_save_registration', 'twentynineteen_save_registration');
+add_action('wp_ajax_nopriv_save_registration', 'twentynineteen_save_registration');
 
 function twentynineteen_send_contact_form() {
     $formData = $_POST['form'];
@@ -333,6 +337,11 @@ function twentynineteen_update_main_course_list() {
     set_query_var('paged', $paged);
     get_template_part('template-parts/main-courses/content', 'list');
 
+    wp_die();
+}
+
+function twentynineteen_save_registration() {
+    wp_send_json_success([ 'reservation' => $_POST['reservation'] ]);
     wp_die();
 }
 
