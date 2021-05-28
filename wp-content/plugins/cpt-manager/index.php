@@ -150,4 +150,35 @@ function init_reservation_cpt() {
 
 }
 
+// DATABASE SCHEMA
+
+function init_reservation_db() {
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+    global $wpdb;
+    $tableName = $wpdb->prefix . 'reservation';
+
+    if ($wpdb->get_var("show tables like '$tableName'") === $tableName) {
+        return;
+    }
+
+    $query = "
+            CREATE TABLE IF NOT EXISTS `wp_reservation`
+              (
+                 `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                 `reservation` BIGINT(20) UNSIGNED,
+                 `people` INT(16) NOT NULL,
+                 `phone` VARCHAR(32) NOT NULL,
+                 `email` VARCHAR(64) NOT NULL,
+                 FOREIGN KEY(`reservation`) REFERENCES " . $wpdb->prefix . "posts(`ID`)
+              )
+            engine=innodb
+            DEFAULT charset=UTF8;
+        ";
+
+    dbDelta($query);
+}
+
 add_action( 'init', 'init_reservation_cpt', 0 );
+add_action( 'init', 'init_reservation_db', 0 );
+
