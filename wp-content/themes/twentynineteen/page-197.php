@@ -6,9 +6,9 @@
     </header>
 
     <main id="main" class="site-main">
-        <p>Tous les évènements</p>
-        <?php
+        <h1 style="font-size: 32px;">Tous les évènements</h1>
 
+        <?php
             $query = new WP_Query([
                 'post_type' => 'reservation',
                 'meta_key' => 'reservation_date',
@@ -18,19 +18,26 @@
                 'order' => 'ASC',
             ]);
 
+        ?>
+        <section style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 2em; width: 90%; margin-left: 5%;"><?php
             while ($query->have_posts()):
                 $query->the_post();
                 $title = get_the_title();
                 $image = get_field('reservation_image', get_the_ID());
                 $description = get_field('reservation_description', get_the_ID());
                 $date = get_field('reservation_date', get_the_ID());
-                echo get_the_title() . '<br>';
-                echo wp_get_attachment_image($image['ID'], 'medium') . '<br>';
-                echo $description . '<br>';
-                echo $date . '<br>';
 
-                echo '<br>';
-            endwhile; ?>
+                ?> <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: calc(33.33% - 2em); margin: 1em; padding: 1em; border: 3px solid black; text-align: center;">
+                    <?php
+                        echo '<b>' . get_the_title() . '</b>';
+                        echo wp_get_attachment_image($image['ID'], [ '400', '200' ]);
+                        echo $description . '<br>';
+                        echo '<b>' . $date . '</b>';
+                        echo '<button class="reservation-btn" data-reservation="' . get_the_ID() . '"> I want to be in ! </button>';
+                    ?>
+                </div> <?php
+            endwhile;
+        ?></section>
     </main>
 </div>
 
