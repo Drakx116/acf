@@ -34,8 +34,25 @@
                         echo $description . '<br>';
                         echo '<b>' . $date . '</b>';
                         echo '<button class="reservation-btn" data-reservation="' . get_the_ID() . '"> I want to be in ! </button>';
-                    ?>
-                </div> <?php
+
+
+                        ?>
+                        <br>
+                        <label for="phone-<?php echo get_the_ID(); ?>"> Téléphone  </label>
+                        <input id="phone-<?php echo get_the_ID(); ?>" type="tel">
+
+                        <label for="people-<?php echo get_the_ID(); ?>"> Personnes </label>
+                        <select id="people-<?php echo get_the_ID(); ?>" name="">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+
+                        <label for="email-<?php echo get_the_ID(); ?>"> Email </label>
+                        <input id="email-<?php echo get_the_ID(); ?>" type="email">
+                    </div>
+                <?php
             endwhile;
         ?></section>
     </main>

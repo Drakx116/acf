@@ -340,8 +340,21 @@ function twentynineteen_update_main_course_list() {
     wp_die();
 }
 
-function twentynineteen_save_registration() {
-    wp_send_json_success([ 'reservation' => $_POST['reservation'] ]);
+function twentynineteen_save_registration()
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'logger';
+
+    $data = [
+        'reservation' => (int) $_POST['reservation'],
+        'people' => (int) $_POST['people'],
+        'phone' => $_POST['phone'],
+        'email' => $_POST['email'],
+    ];
+
+    $result = $wpdb->insert($table, $data);
+
+    wp_send_json_success([ 'data' => $result ]);
     wp_die();
 }
 
