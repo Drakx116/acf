@@ -343,9 +343,7 @@ function twentynineteen_update_main_course_list() {
 function twentynineteen_save_registration()
 {
     global $wpdb;
-    $table = $wpdb->prefix . 'logger';
-
-
+    $table = $wpdb->prefix . 'reservation';
 
     $data = [
         'reservation' => (int) $_POST['reservation'],
@@ -354,7 +352,7 @@ function twentynineteen_save_registration()
         'email' => $_POST['email'],
     ];
 
-    $result = $wpdb->insert($table, $data);
+    $wpdb->insert($table, $data);
 
     wp_send_json_success($data);
     wp_die();
